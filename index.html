@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid #007BFF;
+            background-color: #fff;
+            color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .button-container button.selected {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .button-container button.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            border: 2px solid #28a745;
+            color: #28a745;
+            pointer-events: none;
+        }
+        .button-container button.disabled2 {
+            cursor: not-allowed;
+            opacity: 0.6;
+            border: 2px solid #FF0000;
+            color: #FF0000;
+            pointer-events: none;
+        }
+        .confirm-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid #28a745;
+            background-color: #fff;
+            color: #28a745;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .confirm-button:hover {
+            background-color: #28a745;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="nome"></h1>
+    <script src="ciao.js"></script>
+    <div class="button-container" id="indovinati"></div>
+    <div class="button-container" id="buttonContainer"></div>
+    <div class="button-container" id="sbagliati"></div>
+    <button class="confirm-button" id="confirmButton" style="display: block;">Conferma</button>
+    <button class="confirm-button" id="aggiornabene" style="display: none;" onclick="refresh()">Nuovo round</button>
+
+
+    <script>
+        const sampleSize = 10;
+		let mancanti = 3;
+		const pivot = 15 + Math.floor(Math.random() * 92);
+		console.log(pivot);
+
+        //const storedPoints = sessionStorage.getItem("punti");
+        //const punti = JSON.parse(storedPoints);
+        //document.getElementById('nome').innerHTML = punti[punti[punti.length - 1]] + " seleziona una categoria";
+
+		function refresh() {location.reload();}
+
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				// Generate a random index from 0 to i
+				const j = Math.floor(Math.random() * (i + 1));
+
+				// Swap elements at indices i and j
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+			return array;
+		}
+
+		function getRandomSample(arr, pivot) {
+			let subset1 = arr.slice(pivot-15,pivot);
+			let shuffled = subset1.slice();
+			let i = shuffled.length, temp, index;
+			while (i--) {
+				index = Math.floor((i + 1) * Math.random());
+				temp = shuffled[index];
+				shuffled[index] = shuffled[i];
+				shuffled[i] = temp;
+			}
+			let sample = shuffled.slice(0, 7);
+			let subset2 = arr.slice(pivot+1,pivot+5);
+				shuffled = subset2.slice();
+				i = shuffled.length, temp, index;
+			while (i--) {
+				index = Math.floor((i + 1) * Math.random());
+				temp = shuffled[index];
+				shuffled[index] = shuffled[i];
+				shuffled[i] = temp;
+			}
+			sample.push(...shuffled.slice(0, 3))
+			return shuffleArray(sample);
+		}
+		
+		function finale ()
+		{
+			var buttonContainer = document.getElementById('buttonContainer');
+			var buttons = Array.from(buttonContainer.getElementsByTagName("button"));
+			buttons.forEach(function(button) {
+				button.classList.remove('selected');
+				button.innerHTML += "<br>" + button.getAttribute('risposta');
+			});
+			buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+			buttons.forEach(button => buttonContainer.appendChild(button));
+		}
+
+
+
+        const sample = getRandomSample(Ciao, pivot);
+        const buttonContainer = document.getElementById('buttonContainer');
+        const indovinati = document.getElementById('indovinati');
+        sample.forEach(element => {
+            const button = document.createElement('button');
+            button.innerHTML = element[1];
+			button.setAttribute('risposta', element[0]);
+			button.setAttribute('indice', element[2]);
+            button.addEventListener('click', () => {
+                if (!button.classList.contains('disabled')) {
+                    document.querySelectorAll('.button-container button').forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                }
+            });
+            buttonContainer.appendChild(button);
+        });
+
+        document.getElementById('confirmButton').addEventListener('click', () => {
+            const selectedButton = document.querySelector('.button-container button.selected');
+            if (selectedButton) {
+                selectedButton.classList.remove('selected');
+				selectedButton.innerHTML += "<br>" + selectedButton.getAttribute('risposta');
+				if(selectedButton.getAttribute('indice')<pivot){
+					selectedButton.classList.add('disabled');
+					indovinati.appendChild(selectedButton);
+					const buttons = Array.from(indovinati.getElementsByTagName("button"));
+					buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+					buttons.forEach(button => indovinati.appendChild(button));
+				} else{
+					selectedButton.classList.add('disabled2');
+					sbagliati.appendChild(selectedButton);
+					const buttons = Array.from(sbagliati.getElementsByTagName("button"));
+					buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+					buttons.forEach(button => sbagliati.appendChild(button));
+					mancanti--;
+					if (!mancanti)
+					{
+						alert('Round finito.');
+						document.getElementById('confirmButton').style.display = 'none';
+						document.getElementById('aggiornabene').style.display = 'block';
+						finale();
+					}
+				}
+            } else {
+                alert('Please select an option.');
+            }
+        });
+    </script>
+</body>
+</html>
