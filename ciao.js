@@ -49,6 +49,7 @@ const Ciao = [
 ['21/02/1986', 'Uscita del primo gioco della saga: *Super Mario Bros.*', 47],
 ['07/11/1988', "Prima trasmissione televisiva di 'Striscia la notizia'.", 48],
 ['04/06/1989', 'Massacro di Tiananmen in Cina.', 49],
+["05/07/1989", "Viene trasmesso in tv il primo di Dragon Ball doppiato in italiano"], 
 ['09/11/1989', 'Caduta del Muro di Berlino.', 50],
 ['10/12/1990', 'La Germania viene ufficialmente riunificata.', 51],
 ['18/07/1991', "La popolare serie TV 'The X-Files' fa il suo debutto.", 52],
