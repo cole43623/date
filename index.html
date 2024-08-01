@@ -81,6 +81,7 @@
     <script>
         const sampleSize = 10;
 		let mancanti = 3;
+		let fatti = 0;
 		const pivot = 15 + Math.floor(Math.random() * 92);
 		console.log(pivot);
 
@@ -162,6 +163,7 @@
                 selectedButton.classList.remove('selected');
 				selectedButton.innerHTML += "<br>" + selectedButton.getAttribute('risposta');
 				if(selectedButton.getAttribute('indice')<pivot){
+				fatti++;
 					selectedButton.classList.add('disabled');
 					indovinati.appendChild(selectedButton);
 					const buttons = Array.from(indovinati.getElementsByTagName("button"));
@@ -174,14 +176,15 @@
 					buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
 					buttons.forEach(button => sbagliati.appendChild(button));
 					mancanti--;
-					if (!mancanti)
-					{
-						alert('Round finito.');
-						document.getElementById('confirmButton').style.display = 'none';
-						document.getElementById('aggiornabene').style.display = 'block';
-						finale();
-					}
 				}
+				if (!mancanti || fatti==7)
+				{
+					alert('Round finito.');
+					document.getElementById('confirmButton').style.display = 'none';
+					document.getElementById('aggiornabene').style.display = 'block';
+					finale();
+				}
+
             } else {
                 alert('Please select an option.');
             }
