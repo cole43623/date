@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample Selector</title>
+    <title>Gioco date</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,28 +82,20 @@
         const sampleSize = 10;
 		let mancanti = 3;
 		let fatti = 0;
-		const pivot = 15 + Math.floor(Math.random() * 92);
+		//const pivot = Math.floor(Math.random() * 104);
+		const pivot = 0;
 		console.log(pivot);
-
+		Ciao.forEach((subList, index) => {
+			subList.push(index);
+		});
         //const storedPoints = sessionStorage.getItem("punti");
         //const punti = JSON.parse(storedPoints);
         //document.getElementById('nome').innerHTML = punti[punti[punti.length - 1]] + " seleziona una categoria";
 
 		function refresh() {location.reload();}
 
-		function shuffleArray(array) {
-			for (let i = array.length - 1; i > 0; i--) {
-				// Generate a random index from 0 to i
-				const j = Math.floor(Math.random() * (i + 1));
-
-				// Swap elements at indices i and j
-				[array[i], array[j]] = [array[j], array[i]];
-			}
-			return array;
-		}
-
 		function getRandomSample(arr, pivot) {
-			let subset1 = arr.slice(pivot-15,pivot);
+			let subset1 = arr.slice(pivot,pivot+20);
 			let shuffled = subset1.slice();
 			let i = shuffled.length, temp, index;
 			while (i--) {
@@ -112,18 +104,8 @@
 				shuffled[index] = shuffled[i];
 				shuffled[i] = temp;
 			}
-			let sample = shuffled.slice(0, 7);
-			let subset2 = arr.slice(pivot+1,pivot+5);
-				shuffled = subset2.slice();
-				i = shuffled.length, temp, index;
-			while (i--) {
-				index = Math.floor((i + 1) * Math.random());
-				temp = shuffled[index];
-				shuffled[index] = shuffled[i];
-				shuffled[i] = temp;
-			}
-			sample.push(...shuffled.slice(0, 3))
-			return shuffleArray(sample);
+			let sample = shuffled.slice(0, 10);
+			return (sample);
 		}
 		
 		function finale ()
@@ -134,7 +116,7 @@
 				button.classList.remove('selected');
 				button.innerHTML += "<br>" + button.getAttribute('risposta');
 			});
-			buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+			buttons.sort((a, b) => parseInt(a.getAttribute('indice'), 10) - parseInt(b.getAttribute('indice'), 10));
 			buttons.forEach(button => buttonContainer.appendChild(button));
 		}
 
@@ -157,23 +139,31 @@
             buttonContainer.appendChild(button);
         });
 
+		function findlast(listOfLists) {
+			listOfLists.sort((a, b) => {
+				return a[a.length - 1] - b[b.length - 1];
+			});
+			return (listOfLists[7][2]);
+		}
+
+		const last = findlast(sample);
         document.getElementById('confirmButton').addEventListener('click', () => {
             const selectedButton = document.querySelector('.button-container button.selected');
             if (selectedButton) {
                 selectedButton.classList.remove('selected');
 				selectedButton.innerHTML += "<br>" + selectedButton.getAttribute('risposta');
-				if(selectedButton.getAttribute('indice')<pivot){
+				if(selectedButton.getAttribute('indice')<last){
 				fatti++;
 					selectedButton.classList.add('disabled');
 					indovinati.appendChild(selectedButton);
 					const buttons = Array.from(indovinati.getElementsByTagName("button"));
-					buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+					buttons.sort((a, b) => parseInt(a.getAttribute('indice'), 10) - parseInt(b.getAttribute('indice'), 10));
 					buttons.forEach(button => indovinati.appendChild(button));
 				} else{
 					selectedButton.classList.add('disabled2');
 					sbagliati.appendChild(selectedButton);
 					const buttons = Array.from(sbagliati.getElementsByTagName("button"));
-					buttons.sort((a, b) => a.getAttribute('indice').localeCompare(b.getAttribute('indice')));
+					buttons.sort((a, b) => parseInt(a.getAttribute('indice'), 10) - parseInt(b.getAttribute('indice'), 10));
 					buttons.forEach(button => sbagliati.appendChild(button));
 					mancanti--;
 				}
