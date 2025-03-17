@@ -63,7 +63,7 @@ const Ciao = [
 ["26/04/1986", "Disastro di Černobyl'."],
 ['07/11/1988', "Prima trasmissione televisiva di 'Striscia la notizia'."],
 ['04/06/1989', 'Massacro di Tiananmen in Cina.'],
-['05/07/1989', 'Viene trasmesso in tv il primo di Dragon Ball doppiato in italiano'],
+['05/07/1989', 'Viene trasmesso in tv il primo episodio di Dragon Ball doppiato in italiano'],
 ['09/11/1989', 'Caduta del Muro di Berlino.'],
 ['10/12/1990', 'La Germania viene ufficialmente riunificata.'],
 ['18/07/1991', "La popolare serie TV 'The X-Files' fa il suo debutto."],
